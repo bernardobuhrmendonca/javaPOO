@@ -75,6 +75,21 @@ public class ContaBanco implements InterfaceConta {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //ToString:
+
+    public String toString() {
+        return "Conta Banco{" +
+                "Usuário Conta = " + usuarioConta +
+                ", Tipo = " + tipo +
+                ", Número Conta =" + numeroConta +
+                ", Saldo = " + saldo +
+                ", Aberta = " + aberta +
+                '}';
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     //Métodos interface:
 
     @Override
@@ -126,7 +141,7 @@ public class ContaBanco implements InterfaceConta {
     }
 
     @Override
-    public void tranferencia(ContaBanco contaDeposito, ContaBanco contaSaque, double valor) {
+    public void tranferencia(ContaBanco contaSaque, ContaBanco contaDeposito, double valor) {
         contaSaque.sacar(valor);
         contaDeposito.depositar(valor);
     }

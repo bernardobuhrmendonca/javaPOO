@@ -81,7 +81,6 @@ public class ControleRemoto implements InterfaceControle {
 
     //ToString:
 
-    @Override
     public String toString() {
         return "ControleRemoto{" +
                 "volume = " + this.volume +

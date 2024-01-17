@@ -1,6 +1,7 @@
 package OBJ07;
 
 import OBJ01.Caneta;
+import OBJ04.ContaBanco;
 import OBJ06.Pessoa;
 
 public class Aluno extends Pessoa implements InterfaceAluno{
@@ -13,9 +14,13 @@ public class Aluno extends Pessoa implements InterfaceAluno{
     private double nota;
     private String curso;
     private boolean matriculaAtiva;
-    private int serieEperiodo;
+    private int serieOuPeriodo;
     private boolean aprovado;
     private boolean fezAProva;
+    private ContaBanco contaBancoAluno;
+    private double mensalidade;
+    private boolean mensalidadePaga;
+    private int porcentagemBolsa;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,8 +52,8 @@ public class Aluno extends Pessoa implements InterfaceAluno{
         return this.matriculaAtiva;
     }
 
-    public int getSerieEperiodo() {
-        return this.serieEperiodo;
+    public int getSerieOuPeriodo() {
+        return this.serieOuPeriodo;
     }
 
     public boolean isAprovado() {
@@ -57,6 +62,22 @@ public class Aluno extends Pessoa implements InterfaceAluno{
 
     public boolean isFezAProva() {
         return fezAProva;
+    }
+
+    public ContaBanco getContaBancoAluno() {
+        return this.contaBancoAluno;
+    }
+
+    public double getMensalidade() {
+        return mensalidade;
+    }
+
+    public int getPorcentagemBolsa() {
+        return porcentagemBolsa;
+    }
+
+    public boolean isMensalidadePaga() {
+        return mensalidadePaga;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +100,8 @@ public class Aluno extends Pessoa implements InterfaceAluno{
         this.matriculaAtiva = matriculaAtiva;
     }
 
-    public void setSerieEperiodo(int serieEperiodo) {
-        this.serieEperiodo = serieEperiodo;
+    public void setSerieOuPeriodo(int serieOuPeriodo) {
+        this.serieOuPeriodo = serieOuPeriodo;
     }
 
     public void setAprovado(boolean aprovado) {
@@ -97,11 +118,55 @@ public class Aluno extends Pessoa implements InterfaceAluno{
         this.fezAProva = fezAProva;
     }
 
+    public void setContaBancoAluno(ContaBanco contaBancoAluno) {
+        this.contaBancoAluno = contaBancoAluno;
+    }
+
+    public void setMensalidade(double mensalidade) {
+        if (!isMatriculaAtiva()) {
+            System.out.println("Matrícula inativa, impossível atribuir valor de mensalidade.");
+            this.mensalidade = 0;
+        } else {
+            if (mensalidade>0 && porcentagemBolsa != 100){
+                this.mensalidade = mensalidade;
+            } else if (mensalidade==0 && getPorcentagemBolsa()==100) {
+                this.mensalidade = mensalidade;
+            } else {
+                System.out.println("Incoerência entre valor de mensalidade e porcentagem de bolsa.");
+            }
+        }
+    }
+
+    public void setPorcentagemBolsa(int porcentagemBolsa) {
+        if (!isMatriculaAtiva()) {
+            System.out.println("Matrícula inativa, impossível atribuir valor de mensalidade.");
+            this.mensalidade = 0;
+        } else {
+            if (porcentagemBolsa>0 && porcentagemBolsa<=100){
+                this.porcentagemBolsa = porcentagemBolsa;
+                setMensalidade(getMensalidade() - getMensalidade() * getPorcentagemBolsa() / 100);
+                System.out.println("Porcentagem de bolsa atualizada!");
+            } else if (porcentagemBolsa==0) {
+                if (getPorcentagemBolsa()==0){
+                    System.out.println("Esse aluno já não possuia nenhum valor de bolsa.");
+                } else {
+                    System.out.println("Porcentagem de bolsa atualizada. O aluno deixou de ser bolsista.");
+                    this.porcentagemBolsa = porcentagemBolsa;
+                }
+            } else {
+                System.out.println("Valor inválido para porcentagem de bolsa.");
+            }
+        }
+    }
+
+    public void setMensalidadePaga(boolean mensalidadePaga) {
+        this.mensalidadePaga = mensalidadePaga;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //ToString:
 
-    @Override
     public String toString() {
         return "Aluno{" +
                 "idade = " + getIdade() +
@@ -110,7 +175,7 @@ public class Aluno extends Pessoa implements InterfaceAluno{
                 ", nota = " + getNota() +
                 ", curso = " + getCurso() +
                 ", matriculaAtiva = " + isMatriculaAtiva() +
-                ", serieEperiodo = " + getSerieEperiodo() +
+                ", série Ou Período = " + getSerieOuPeriodo() +
                 ", aprovado = " + isAprovado() +
                 ", fezAProva = " + isFezAProva() +
                 "}";
@@ -136,6 +201,12 @@ public class Aluno extends Pessoa implements InterfaceAluno{
         setFezAProva(true);
         System.out.println("Fazendo a prova...");
         System.out.println("Prova feita!");
+    }
+
+    @Override
+    public void pagarMensalidade(ContaBanco contaBancoEscola, ContaBanco contaBancoAluno) {
+        getContaBancoAluno().tranferencia(contaBancoEscola, contaBancoAluno, getMensalidade());
+        setMensalidadePaga(true);
     }
 
 }
